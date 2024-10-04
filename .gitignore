@@ -1,0 +1,24 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+ENV/
+env/
+
+# Environment variables
+.env
+
+# IDEs and Editors
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS-specific files
+Thumbs.db
+.DS_Store
+desktop.ini
