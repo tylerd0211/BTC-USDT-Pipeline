@@ -1,0 +1,51 @@
+version: "3.8"
+services:
+  airflow:
+    image: apache/airflow:2.6.3
+    container_name: airflow
+    environment:
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+    ports:
+      - "8081:8080"
+    command: >
+      bash -c "airflow db init && airflow webserver"
+    depends_on:
+      - postgres
+    restart: always
+
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+      - "5433:5432"
+
+  questdb:
+    image: questdb/questdb
+    container_name: questdb
+    ports:
+      - "9000:9000"
+      - "8812:8812"
+      - "9009:9009"
+    restart: always
+
+  worker:
+    build:
+      context: .
+    container_name: binance_worker
+    env_file:
+      - .env  # Ensure .env file in the root (btc-usdt)
+    environment:
+      - QUESTDB_HOST=questdb
+      - QUESTDB_PORT=8812
+    depends_on:
+      - questdb
+    restart: always
+

@@ -1,0 +1,5 @@
+pandas
+psycopg2-binary==2.9.6
+python-binance
+ccxt==4.0.93
+python-dotenv
